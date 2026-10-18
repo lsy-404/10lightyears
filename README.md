@@ -46,11 +46,13 @@ python3 scripts/build_similarity_edges.py   # 曲风近邻连线
 python3 scripts/export_web_data.py          # 打包 web/data/ 前端载荷
 ```
 
-`web/data/*.bin` 与 `wrangler.jsonc` 不随仓库分发，克隆后跑一遍上面三条即可生成前端数据。
+`web/data/` 中的前端载荷（含 `*.bin`）随仓库分发，克隆后即可直接预览；修改数据后用上面三条重新生成。
 
 ## 星图
 
-`web/` 是三维星图前端，纯静态，无构建步骤。本地预览：
+美术、设计、编码：武乙凌薇 · 数据处理：StarryMiko2233
+
+`web/` 是三维星图前端，纯静态，无构建步骤。在线访问：<https://10lightyears.voidcarve.com/>，以及 Tiny Projects 的 <https://tiny.leisiyu.dev/games/ten-light-years/>（以固定提交的子模块发布 `web/`）。「退出游戏」入口和标题中的 Tiny Projects 只在 Tiny 的 `/games/` 路径下出现。本地预览：
 
 ```bash
 python3 -m http.server 8000 --directory web

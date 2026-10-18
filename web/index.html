@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>十光年的距离</title>
+<title>十光年的距离 | Tiny Projects</title>
 <meta name="description" content="星尘十周年 · 曲目星图">
+<meta property="og:image" content="./assets/preview.png">
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <style>
   :root {
@@ -479,14 +480,17 @@
     font: inherit; font-size: .6rem; letter-spacing: .06em;
     padding: .12rem .3rem; cursor: pointer;
   }
-  #opts button {
+  #opts button, #opts a {
     margin-top: .3rem; padding: .34rem 0 0;
     border: 0; border-top: 1px solid rgba(242, 200, 75, .16);
     background: none; color: var(--text-dim);
     font: inherit; font-size: .62rem; letter-spacing: .12em;
     text-align: left; cursor: pointer; transition: color .2s;
   }
-  #opts button:hover { color: var(--accent); }
+  #opts a { display: block; text-decoration: none; }
+  #opts button:hover, #opts a:hover,
+  #opts a:focus-visible { color: var(--accent); }
+  html.standalone #exit-game { display: none; }
 
   body.no-reticle #reticle,
   body.no-targets #targets, body.no-targets #hud .tgt-arc,
@@ -916,7 +920,7 @@
       <button id="mode-cruise" type="button">巡游</button>
       <button id="mode-wander" type="button">漫游</button>
     </div>
-    <button id="opt-btn" type="button">显示</button>
+    <button id="opt-btn" type="button">设置</button>
     <button id="help-btn" type="button" aria-label="操作指南">
       <svg viewBox="0 0 16 16" width="13" height="13" fill="none"
            stroke="currentColor" stroke-width="1.5">
@@ -957,6 +961,7 @@
         <option value="high">高</option>
       </select>
     </label>
+    <a id="exit-game" href="../../" aria-label="退出游戏并返回 Tiny Projects">退出游戏</a>
   </div>
 </div>
 <audio id="bgm" preload="none"></audio>

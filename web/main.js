@@ -1,5 +1,11 @@
 import * as THREE from "three";
 
+/* Tiny Projects 把星图发布在 /games/ 下；其他地址（独立站、本地预览）没有可返回的主菜单。 */
+if (!/^\/games\//.test(location.pathname)) {
+  document.documentElement.classList.add("standalone");
+  document.title = document.title.replace(/ \| Tiny Projects$/, "");
+}
+
 /* ── 视口坐标层：触屏竖屏时 body 顺时针旋 90° 伪装横屏，
    逻辑视口宽高与指针坐标一律经此层换算 ── */
 const fakeLandMq = matchMedia(
@@ -1753,6 +1759,7 @@ const APPROACH_LY = 8.12;   // 自动逼近固定停在这个距离，不再随�
 
 // 手动点选后的辅助驾驶：同一套分段送达，无 orbit 段，任何主动操作打断
 function startAssist(i) {
+  adoptBodyRoll();   // 只在手动态下调用，进来先接管机身滚转
   auto.assist = true;
   bankHas = false;   // 坡度参考的上一帧视线作废，别拿手动那帧去算
   startSegs(flyTo(starVec(i), APPROACH_LY * SCENE_SCALE));
@@ -1761,6 +1768,26 @@ function startAssist(i) {
 /* ── 自动滚转 ────────────────────────────────────────
    滚转与偏航/俯仰同吃 RCS 的角加速度与角速度上限。角度收进 (-π, π]，
    连续横滚才不会把 roll 累加成一个越来越大的数。 */
+
+const rollNeutral = new THREE.Vector3();
+const rollCross = new THREE.Vector3();
+
+/* 手动交给自动的那一帧：把机身当前的滚转量折进 auto.roll。自动段的 up
+   基准是世界 Y（applyCamera），不折算就等于把用户压出来的坡度一帧抹平，
+   地平线硬切回水平。折完由 autoRollTo 按 RCS 规格慢慢收回去。
+   这是 attitudeStep 里自动→手动那次折算的逆向，两边同一套「中性 up」。 */
+function adoptBodyRoll() {
+  rollNeutral.copy(FLIP_UP).addScaledVector(bodyFwd, -FLIP_UP.dot(bodyFwd));
+  if (rollNeutral.lengthSq() < 1e-8) { auto.roll = 0; auto.rollRate = 0; return; }
+  rollNeutral.normalize();
+  rollCross.crossVectors(rollNeutral, bodyUp);
+  auto.roll = Math.atan2(rollCross.dot(bodyFwd), rollNeutral.dot(bodyUp));
+  // 角速度一并接管：手动滚到一半交出去时地平线不该硬停，与反向交接对称
+  auto.rollRate = THREE.MathUtils.clamp(att.roll,
+    -ENGINE.rcs.angMax, ENGINE.rcs.angMax);
+  att.roll = 0;
+}
+
 function autoRoll(rate, dt) {
   const rcs = ENGINE.rcs;
   const want = THREE.MathUtils.clamp(rate, -rcs.angMax, rcs.angMax);
@@ -2229,6 +2256,7 @@ function stepAuto(dt) {
 }
 
 function setAuto(on, mode = "cruise") {
+  const wasAuto = auto.on || auto.assist;
   // 任何入口都先取消辅助驾驶段，早退之前就得清掉
   if (auto.assist) { auto.assist = false; auto.segs = null; auto.engine = ""; }
   if (auto.on === on && (!on || auto.mode === mode)) return;
@@ -2242,6 +2270,7 @@ function setAuto(on, mode = "cruise") {
   }
   refreshBgmName();
   if (on) {
+    if (!wasAuto) adoptBodyRoll();   // 巡游/漫游同样别把手动的坡度一帧抹平
     auto.segs = null;
     auto.engine = "";
     auto.rcsOn = false;
@@ -2929,7 +2958,3 @@ if (helpSeen) {
     }).observe(splashEl, { attributes: true, attributeFilter: ["class"] });
   }
 }
-
-
-
-
