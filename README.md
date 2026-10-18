@@ -52,7 +52,7 @@ python3 scripts/export_web_data.py          # 打包 web/data/ 前端载荷
 
 美术、设计、编码：武乙凌薇 · 数据处理：StarryMiko2233
 
-`web/` 是三维星图前端，纯静态，无构建步骤。在线访问：<https://10lightyears.voidcarve.com/>，以及 Tiny Projects 的 <https://tiny.leisiyu.dev/games/ten-light-years/>（以固定提交的子模块发布 `web/`）。「退出游戏」入口和标题中的 Tiny Projects 只在 Tiny 的 `/games/` 路径下出现。本地预览：
+`web/` 是三维星图前端，纯静态，无构建步骤。在线访问：<https://10lightyears.voidcarve.com/>，以及 Tiny Projects 的 <https://tiny.leisiyu.dev/games/ten-light-years/>（以固定提交的子模块发布 `web/`）。「退出游戏」入口指向托管站点在页面中写入的 `<meta name="home-url">`（Tiny Projects 构建时由 `HOME_URL` 提供）；没有它时不显示退出入口，标题也不带 Tiny Projects。本地预览：
 
 ```bash
 python3 -m http.server 8000 --directory web

@@ -1,9 +1,14 @@
 import * as THREE from "three";
 
-/* Tiny Projects 把星图发布在 /games/ 下；其他地址（独立站、本地预览）没有可返回的主菜单。 */
-if (!/^\/games\//.test(location.pathname)) {
-  document.documentElement.classList.add("standalone");
-  document.title = document.title.replace(/ \| Tiny Projects$/, "");
+/* 托管站点用 <meta name="home-url"> 告知主菜单地址；没有它（独立站、本地预览）就没有可返回的主菜单。 */
+{
+  const homeUrl = document.querySelector('meta[name="home-url"]')?.content;
+  if (homeUrl) {
+    document.getElementById("exit-game").href = homeUrl;
+  } else {
+    document.documentElement.classList.add("standalone");
+    document.title = document.title.replace(/ \| Tiny Projects$/, "");
+  }
 }
 
 /* ── 视口坐标层：触屏竖屏时 body 顺时针旋 90° 伪装横屏，
