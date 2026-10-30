@@ -7,7 +7,6 @@ import * as THREE from "three";
     document.getElementById("exit-game").href = homeUrl;
   } else {
     document.documentElement.classList.add("standalone");
-    document.title = document.title.replace(/ \| Tiny Projects$/, "");
   }
 }
 
