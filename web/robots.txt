@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://10lightyears.voidcarve.com/sitemap.xml

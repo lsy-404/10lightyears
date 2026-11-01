@@ -5,8 +5,5 @@
   "assets": {
     "directory": "./web",
     "not_found_handling": "404-page"
-  },
-  "routes": [
-    { "pattern": "10lightyears.voidcarve.com", "custom_domain": true }
-  ]
+  }
 }
